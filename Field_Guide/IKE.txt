@@ -1,0 +1,50 @@
+.___ ____  __.___________
+|   |    |/ _|\_   _____/
+|   |      <   |    __)_
+|   |    |  \  |        \
+|___|____|__ \/_______  /
+            \/        \/
+---------------------------------------------------------------------------------------------------------------
+
+IPsec is the most commonly used technology for both gateway-to-gateway (LAN-to-LAN) and host to
+gateway (remote access) enterprise VPN solutions.
+
+IKE is a type of ISAKMP (Internet Security Association Key Management Protocol) implementation,
+which is a framework for authentication and key exchange. IKE establishes the security association (SA)
+between two endpoints through a three-phase process:
+
+-Phase 1: Establish a secure channel between 2 endpoints using a Pre-Shared Key (PSK) or certificates.
+It can use main mode (3 pairs of messages) or aggresive mode.
+
+-Phase1.5: This is optional, is called Extended Authentication Phase and authenticates the user
+that is trying to connect (user+password).
+
+-Phase2: Negotiates the parameter for the data security using ESP and AH. It can use a different
+algorithm than the one used in phase 1 (Perfect Forward Secrecy (PFS)).
+-----------------------------------------------------------------------------------------------------------------------
+
+#Finding a valid transformation
+ike-scan -M 172.16.21.200
+
+Output should look like this:
+
+Starting ike-scan 1.9 with 1 hosts (http://www.nta-monitor.com/tools/ike-scan/)
+172.16.21.200    Main Mode Handshake returned
+    HDR=(CKY-R=d90bf054d6b76401)
+    SA=(Enc=3DES Hash=SHA1 Group=2:modp1024 Auth=PSK LifeType=Seconds LifeDuration=28800)
+    VID=4048b7d56ebce88525e7de7f00d6c2d3c0000000 (IKE Fragmentation)
+
+Ending ike-scan 1.9: 1 hosts scanned in 0.015 seconds (65.58 hosts/sec). 1 returned handshake; 0 returned notify
+
+As you can see in the previous response, there is a field called AUTH with the value PSK.
+This means that the vpn is configured using a preshared key (and this is really good for a pentester).
+The value of the last line is also very important:
+
+-0 returned handshake; 0 returned notify: This means the target is not an IPsec gateway.
+-1 returned handshake; 0 returned notify: This means the target is configured for IPsec and
+ is willing to perform IKE negotiation, and either one or more of the transforms you proposed
+ are acceptable (a valid transform will be shown in the output).
+-0 returned handshake; 1 returned notify: VPN gateways respond with a notify message when none
+of the transforms are acceptable (though some gateways do not, in which case further analysis
+and a revised proposal should be tried).
+

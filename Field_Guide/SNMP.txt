@@ -37,6 +37,12 @@ required to know what host to probe. To specify a port for the SNMP server other
 snmp-interfaces.port. When run in this way, the script's output tells how many new targets were
 successfully added.
 
+nmap -sU -p 161 --script=snmp-processes <target>
+
+The snmp-processes.nse script attempts to enumerate running processes through SNMP.
+
+------------------------------------------------------------------------------------------------------------
+
 
 
 
