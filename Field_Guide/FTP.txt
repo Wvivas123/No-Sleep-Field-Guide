@@ -4,28 +4,43 @@ ________________________________
  |     \     |    |    |    |
  \___  /     |____|    |____|
      \/
------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------
 The File Transfer Protocol (FTP) is a standard network protocol used for the transfer of
 computer files between a client and server on a computer network. It is a plain-text protocol
 that uses as new line character 0x0d 0x0a so sometimes you need to connect using telnet or nc -C.
 Default Port: 21
 PORT   STATE SERVICE
 21     open  ftp
------------------------------------------------------------------------------------------------------------------------------------------------------------
-Unauthed enumeration:
+---------------------------------------------------------------------------------------------------------------------
+#Unauthed enumeration:
 With nmap:
 sudo nmap -sV -p21 -sC -A [ip address]
 
-Try Anonymous Login:
+ALL NMAP scripts:
+
+ftp-anon.maxlist:
+The maximum number of files to return in the directory listing. By default it is 20,
+or unlimited if verbosity is enabled. Use a negative number to disable the limit, or 0 to disable the
+listing entirely.
+nmap --script=ftp-anon --script-args ftp-anon.maxlist=value <target>
+
+ftp-brute:
+Performs brute force password auditing against FTP servers.
+
+nmap --script ftp-brute -p 21 <host>
+
+------------------------------------------------------------------------------------------------------------------------
+#Try Anonymous Login:
 ftp [ip address]
 
-Try to get a file:
+#Try to get a file:
 GET [file name]
 
-Try to push a file
+#Try to push a file
 PUT [file name]
+-----------------------------------------------------------------------------------------------------------------
 
-Browser connection
+#Browser connection
 You can connect to a FTP server using a browser (like Firefox) using a URL like:
 ftp://anonymous:anonymous@10.10.10.98
 Note that if a web application is sending data controlled by a user directly to a FTP server
@@ -34,30 +49,38 @@ the FTP server perform arbitrary actions. One of this possible arbitrary actions
 content from a users controlled server, perform port scanning or try to talk to other plain-text
 based services (like http).
 
-Some FTP commands
-USER username
-PASS password
-HELP The server indicates which commands are supported
+------------------------------------------------------------------------------------------------------------------------
+#Some FTP commands
+USER [username]
+PASS [password]
+HELP - The server indicates which commands are supported
 
-PORT 127,0,0,1,0,80This will indicate the FTP server to establish a connection with the
+PORT 127,0,0,1,0,80 - This will indicate the FTP server to establish a connection with the
 IP 127.0.0.1 in port 80 (you need to put the 5th char as "0" and the 6th as the port in
 decimal or use the 5th and 6th to express the port in hex).
 
-EPRT |2|127.0.0.1|80|This will indicate the FTP server to establish a TCP connection
+EPRT - |2|127.0.0.1|80|This will indicate the FTP server to establish a TCP connection
 (indicated by "2") with the IP 127.0.0.1 in port 80. This command supports IPv6.
 
-LIST This will send the list of files in current folder
-LIST -R List recursively (if allowed by the server)
+LIST - This will send the list of files in current folder
+LIST -R - List recursively (if allowed by the server)
 
-APPE /path/something.txt This will indicate the FTP to store the data received from a passive
+APPE - /path/something.txt This will indicate the FTP to store the data received from a passive
 connection or from a PORT/EPRT connection to a file. If the filename exists, it will append the data.
 
-STOR /path/something.txt Like APPE but it will overwrite the files
-STOU /path/something.txt Like APPE, but if exists it won't do anything.
-RETR /path/to/file A passive or a port connection must be establish. Then,
+STOR - /path/something.txt Like APPE but it will overwrite the files
+
+STOU - /path/something.txt Like APPE, but if exists it won't do anything.
+
+RETR - /path/to/file A passive or a port connection must be establish. Then,
 the FTP server will send the indicated file through that connection
-REST 6 This will indicate the server that next time it send something using RETR it
+
+REST 6 - This will indicate the server that next time it send something using RETR it
 should start in the 6th byte.
-TYPE i Set transfer to binary
-PASV This will open a passive connection and will indicate the user were he can connects
-PUT /tmp/file.txt Upload indicated file to the FTP
+
+TYPE i - Set transfer to binary
+
+PASV - This will open a passive connection and will indicate the user were he can connects
+
+PUT - /tmp/file.txt Upload indicated file to the FTP
+------------------------------------------------------------------------------------------------------------------------

@@ -7,13 +7,15 @@ def print_hi(name):
 
     protocol = input('Which Protocol or Tool?: ')
 
+    if protocol == 'ftp':
+        a = open("Field_Guide/FTP.txt", "r")
+        print(a.read())
+
+    if protocol == 'snmp':
+        b = open("Field_Guide/SNMP.txt", "r")
+        print(b.read())
 
 
-    if protocol == 'ftp' or '21':
-       f = open("Field_Guide/FTP.txt", "r")
-       print(f.read())
-    else:
-       print(f'PROTOCOL NOT FOUND')
 
 
    # Press the green button in the gutter to run the script.

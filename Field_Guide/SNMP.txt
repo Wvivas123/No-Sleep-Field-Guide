@@ -1,0 +1,43 @@
+ ______ ____   _____ ______
+ /  ___//    \ /     \\____ \
+ \___ \|   |  \  Y Y  \  |_> >
+/____  >___|  /__|_|  /   __/
+     \/     \/      \/|__|
+------------------------------------------------------------------------------------------------------------------------
+SNMP - Simple Network Management Protocol is a protocol used to monitor different devices
+in the network (like routers, switches, printers, IoTs...)
+
+PORT    STATE SERVICE REASON                 VERSION
+161/udp open  snmp    udp-response ttl 244   ciscoSystems SNMPv3 server (public)
+------------------------------------------------------------------------------------------------------------------------
+#Enumerating SNMP
+Go looking for community strings:
+snmp-check 192.168.1.2 -c public
+
+If you know a valid community string, you can access the data using SNMPWalk or SNMP-Check:
+snmpbulkwalk -c [COMM_STRING] -v [VERSION] [IP] . #Don't forget the final dot
+snmpbulkwalk -c public -v2c 10.10.11.136 .
+
+snmpwalk -v [VERSION_SNMP] -c [COMM_STRING] [DIR_IP]
+snmpwalk -v [VERSION_SNMP] -c [COMM_STRING] [DIR_IP] 1.3.6.1.2.1.4.34.1.3 #Get IPv6, needed dec2hex
+snmpwalk -v [VERSION_SNMP] -c [COMM_STRING] [DIR_IP] NET-SNMP-EXTEND-MIB::nsExtendObjects #get extended
+snmpwalk -v [VERSION_SNMP] -c [COMM_STRING] [DIR_IP] .1 #Enum all
+
+snmp-check [DIR_IP] -p [PORT] -c [COMM_STRING]
+braa <community string>@<IP>:.1.3.6.* #Bruteforce specific OID
+
+#nmap snmp scripts:
+nmap -sU -p 161 --script=snmp-interfaces <target>
+
+Attempts to enumerate network interfaces through SNMP.
+
+This script can also be run during Nmap's pre-scanning phase and can attempt to add the SNMP
+server's interface addresses to the target list. The script argument snmp-interfaces.host is
+required to know what host to probe. To specify a port for the SNMP server other than 161, use
+snmp-interfaces.port. When run in this way, the script's output tells how many new targets were
+successfully added.
+
+
+
+
+
