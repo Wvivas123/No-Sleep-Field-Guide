@@ -18,6 +18,9 @@ def print_hi(name):
     if protocol == 'ike':
         b = open("Field_Guide/IKE.txt", "r")
         print(b.read())
+    if protocol == 'smtp':
+        b = open("Field_Guide/SMTP.txt", "r")
+        print(b.read())
 
 if __name__ == '__main__':
     print_hi('PyCharm')

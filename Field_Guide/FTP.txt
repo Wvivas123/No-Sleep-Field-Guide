@@ -32,12 +32,17 @@ nmap --script ftp-brute -p 21 <host>
 ------------------------------------------------------------------------------------------------------------------------
 #Try Anonymous Login:
 ftp [ip address]
+username: anonymous
+password: [blank]
+*If this works in the right contex it's a vuln.
 
 #Try to get a file:
 GET [file name]
+*Is there anything sensitive in there?
 
 #Try to push a file
 PUT [file name]
+*This allows for the propagation of malicous files.
 -----------------------------------------------------------------------------------------------------------------
 
 #Browser connection
@@ -50,7 +55,7 @@ content from a users controlled server, perform port scanning or try to talk to 
 based services (like http).
 
 ------------------------------------------------------------------------------------------------------------------------
-#Some FTP commands
+#Some usefull FTP commands:
 USER [username]
 PASS [password]
 HELP - The server indicates which commands are supported
